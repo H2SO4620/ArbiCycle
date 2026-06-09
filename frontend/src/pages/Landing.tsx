@@ -266,11 +266,11 @@ export default function Landing() {
             { val: "Chainlink Automation", desc: "Self-executing rounds" },
             { val: "Aave v3",            desc: "Idle yield" },
             { val: "USDC",               desc: "Stable contributions" },
-          ].map(([name, desc]) => (
-            <div key={name} style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          ].map(({ val, desc }) => (
+            <div key={val} style={{ display: "flex", alignItems: "center", gap: 8 }}>
               <span style={{ width: 5, height: 5, borderRadius: "50%", background: T.emerald, flexShrink: 0 }} />
               <span style={{ fontSize: 13, color: T.ivorySubtle, whiteSpace: "nowrap" }}>
-                <span style={{ color: T.ivoryDim, fontWeight: 500 }}>{name}</span>
+                <span style={{ color: T.ivoryDim, fontWeight: 500 }}>{val}</span>
                 {" · "}{desc}
               </span>
             </div>
