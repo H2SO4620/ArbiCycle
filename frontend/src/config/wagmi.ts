@@ -26,14 +26,17 @@ export const robinhoodChain = defineChain({
   },
 });
 
-const WC_PROJECT_ID = import.meta.env.VITE_WC_PROJECT_ID ?? "arbicycle-dev";
+const WC_PROJECT_ID = import.meta.env.VITE_WC_PROJECT_ID;
 
 export const wagmiConfig = createConfig({
   chains: [arbitrumSepolia, arbitrum, robinhoodChain],
   connectors: [
     injected(),
     coinbaseWallet({ appName: "ArbiCycle" }),
-    walletConnect({ projectId: WC_PROJECT_ID }),
+    // Only register WalletConnect when a real Reown/WalletConnect Cloud project ID is
+    // configured. With a placeholder/missing ID, the connector's preloadListings call
+    // to the Reown explorer API returns an unexpected payload and crashes the app on mount.
+    ...(WC_PROJECT_ID ? [walletConnect({ projectId: WC_PROJECT_ID })] : []),
   ],
   transports: {
     [arbitrumSepolia.id]: http(
