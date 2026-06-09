@@ -3,7 +3,7 @@ import { useAccount, useReadContract, useChainId } from "wagmi";
 import { CIRCLE_FACTORY_ABI } from "../config/abis";
 import { CONTRACTS } from "../config/wagmi";
 import CircleCard, { CircleCardSkeleton } from "../components/CircleCard";
-import { Plus, ArrowRight, Wallet, Compass } from "lucide-react";
+import { Plus, ArrowRight, Wallet } from "lucide-react";
 import { arbitrumSepolia } from "wagmi/chains";
 import LivingCircle, { DEMO_MEMBERS } from "../components/LivingCircle";
 
@@ -137,7 +137,7 @@ export default function Home() {
               No coordinator. No disputes. No missing money.
             </p>
             <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-              <button onClick={() => navigate("/app/explore")} style={{
+              <button onClick={() => navigate("/app/create")} style={{
                 background: T.emerald, color: T.ivory,
                 border: "none", borderRadius: 9,
                 padding: "12px 24px", fontSize: 14, fontWeight: 600,
@@ -145,18 +145,7 @@ export default function Home() {
                 cursor: "pointer", transition: "all 0.2s",
                 display: "flex", alignItems: "center", gap: 7,
               }}>
-                <Compass size={14} /> Browse Circles
-              </button>
-              <button onClick={() => navigate("/app/create")} style={{
-                background: "transparent", color: T.ivoryDim,
-                border: `1px solid ${T.border}`,
-                borderRadius: 9, padding: "12px 24px",
-                fontSize: 14, fontWeight: 500,
-                fontFamily: "Space Grotesk, sans-serif",
-                cursor: "pointer", transition: "all 0.2s",
-                display: "flex", alignItems: "center", gap: 7,
-              }}>
-                <Plus size={14} /> Create Circle
+                <Plus size={14} /> Start a Circle
               </button>
             </div>
           </div>
@@ -384,19 +373,3 @@ function MyCirclesEmpty() {
   );
 }
 
-function EmptyState({ message, action, onAction }: { message: string; action: string; onAction: () => void }) {
-  return (
-    <div style={{
-      background: T.surface1, border: `1px solid ${T.border}`,
-      borderRadius: 14, padding: "40px 24px", textAlign: "center",
-    }}>
-      <p style={{ fontSize: 14, color: T.ivorySubtle, marginBottom: 16 }}>{message}</p>
-      <button onClick={onAction} style={{
-        background: T.emerald, color: T.ivory, border: "none",
-        borderRadius: 8, padding: "10px 20px",
-        fontSize: 14, fontWeight: 600,
-        fontFamily: "Space Grotesk, sans-serif", cursor: "pointer",
-      }}>{action}</button>
-    </div>
-  );
-}

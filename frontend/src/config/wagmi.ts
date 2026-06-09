@@ -51,8 +51,8 @@ export const wagmiConfig = createConfig({
 // ── Deployed contract addresses (fill in after deploy) ────────────────────────
 export const CONTRACTS = {
   [arbitrumSepolia.id]: {
-    factory:    (import.meta.env.VITE_FACTORY_SEPOLIA    ?? "0x0000000000000000000000000000000000000000") as `0x${string}`,
-    reputation: (import.meta.env.VITE_REPUTATION_SEPOLIA ?? "0x0000000000000000000000000000000000000000") as `0x${string}`,
+    factory:    (import.meta.env.VITE_FACTORY_SEPOLIA    ?? "0xbbAE2b7b65c9a9cFA350B6498411C8bD0288e2d1") as `0x${string}`,
+    reputation: (import.meta.env.VITE_REPUTATION_SEPOLIA ?? "0xd4dF8e90e7962D3D057d15b5A0835473e0a048E8") as `0x${string}`,
     usdc:       "0x75faf114eafb1BDbe2F0316DF893fd58CE46AA4d" as `0x${string}`,
   },
   [arbitrum.id]: {

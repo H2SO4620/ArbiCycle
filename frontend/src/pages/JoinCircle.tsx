@@ -3,11 +3,11 @@ import {
   useAccount, useReadContracts, useWriteContract,
   useWaitForTransactionReceipt, useChainId, useReadContract,
 } from "wagmi";
-import { formatUnits } from "viem";
+import { formatUnits, isAddress } from "viem";
 import { CIRCLE_ABI, ERC20_ABI } from "../config/abis";
 import { CONTRACTS } from "../config/wagmi";
 import { arbitrumSepolia } from "wagmi/chains";
-import { Loader2, CheckCircle2, Users, Zap, TrendingUp, ArrowLeft, Lock } from "lucide-react";
+import { Loader2, CheckCircle2, Users, Zap, TrendingUp, ArrowLeft, Lock, AlertCircle } from "lucide-react";
 
 /* ─── tokens ─────────────────────────────────────────────── */
 const T = {
@@ -83,10 +83,34 @@ export default function JoinCircle() {
     query: { enabled: !!userAddr && !!circleAddr },
   });
 
-  const { writeContract: approve, data: approveTx, isPending: approving } = useWriteContract();
-  const { writeContract: join,    data: joinTx,    isPending: joining    } = useWriteContract();
-  const { isLoading: waitingApprove } = useWaitForTransactionReceipt({ hash: approveTx });
-  const { isLoading: waitingJoin, isSuccess: joined } = useWaitForTransactionReceipt({ hash: joinTx });
+  const { data: usdcBalance } = useReadContract({
+    address: contracts.usdc, abi: ERC20_ABI, functionName: "balanceOf",
+    args: [userAddr!],
+    query: { enabled: !!userAddr },
+  });
+
+  const { writeContract: approve, data: approveTx, isPending: approving, error: approveError } = useWriteContract();
+  const { writeContract: join,    data: joinTx,    isPending: joining,   error: joinError    } = useWriteContract();
+  const { isLoading: waitingApprove, isError: approveReverted } = useWaitForTransactionReceipt({ hash: approveTx });
+  const { isLoading: waitingJoin, isSuccess: joined, isError: joinReverted } = useWaitForTransactionReceipt({ hash: joinTx });
+
+  const hasEnoughBalance = usdcBalance !== undefined && amount !== undefined
+    ? (usdcBalance as bigint) >= (amount as bigint)
+    : true; // optimistic until loaded
+
+  const txError = approveError || joinError;
+  const txReverted = approveReverted || joinReverted;
+
+  /* ── Invalid address guard ── */
+  if (circleAddr && !isAddress(circleAddr)) {
+    return (
+      <div style={{ padding: "80px 24px", textAlign: "center" }}>
+        <AlertCircle size={32} color="#EF4444" style={{ margin: "0 auto 16px" }} />
+        <p style={{ fontSize: 16, color: T.ivory, marginBottom: 8 }}>Invalid circle address</p>
+        <p style={{ fontSize: 13, color: T.ivorySubtle }}>This invite link appears to be broken.</p>
+      </div>
+    );
+  }
 
   const contrib   = amount ? formatUnits(amount as bigint, 6) : "…";
   const spotsLeft = maxM && memberCount ? Number(maxM as bigint) - Number(memberCount as bigint) : null;
@@ -260,6 +284,45 @@ export default function JoinCircle() {
         ))}
       </div>
 
+      {/* Error banner */}
+      {(txError || txReverted) && (
+        <div style={{
+          background: "rgba(239,68,68,0.08)",
+          border: "1px solid rgba(239,68,68,0.25)",
+          borderRadius: 10, padding: "12px 16px",
+          display: "flex", alignItems: "flex-start", gap: 10,
+          marginBottom: 12,
+        }}>
+          <AlertCircle size={15} color="#EF4444" style={{ flexShrink: 0, marginTop: 1 }} />
+          <div>
+            <p style={{ fontSize: 13, color: "#EF4444", fontWeight: 600, marginBottom: 2 }}>Transaction failed</p>
+            <p style={{ fontSize: 12, color: T.ivorySubtle, lineHeight: 1.5 }}>
+              {txError?.message?.includes("rejected") || txError?.message?.includes("denied")
+                ? "You rejected the transaction in your wallet."
+                : txError?.message?.includes("insufficient")
+                ? "Insufficient USDC balance."
+                : "Transaction was rejected. Check your balance and try again."}
+            </p>
+          </div>
+        </div>
+      )}
+
+      {/* Low balance warning */}
+      {!hasEnoughBalance && amount && (
+        <div style={{
+          background: "rgba(200,139,58,0.08)",
+          border: "1px solid rgba(200,139,58,0.22)",
+          borderRadius: 10, padding: "10px 14px",
+          display: "flex", alignItems: "center", gap: 8,
+          marginBottom: 12,
+        }}>
+          <AlertCircle size={14} color={T.gold} />
+          <p style={{ fontSize: 12, color: T.ivoryDim }}>
+            Insufficient USDC balance. You need ${contrib} USDC to join.
+          </p>
+        </div>
+      )}
+
       {/* CTA */}
       {isFull || isActive ? (
         <div style={{
@@ -300,7 +363,7 @@ export default function JoinCircle() {
 
           <button
             onClick={() => join({ address: circleAddr!, abi: CIRCLE_ABI, functionName: "join" })}
-            disabled={joining || waitingJoin || needsApprove}
+            disabled={joining || waitingJoin || needsApprove || !hasEnoughBalance}
             style={{
               width: "100%",
               background: joining || waitingJoin || needsApprove

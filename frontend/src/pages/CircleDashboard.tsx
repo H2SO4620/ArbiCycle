@@ -8,8 +8,8 @@ import { CIRCLE_ABI, ERC20_ABI } from "../config/abis";
 import { CONTRACTS } from "../config/wagmi";
 import { arbitrumSepolia } from "wagmi/chains";
 import {
-  Loader2, Share2, CheckCircle2, Clock, Users,
-  TrendingUp, Crown, Copy, AlertCircle, ArrowLeft,
+  Loader2, Share2, CheckCircle2, Clock,
+  TrendingUp, Crown, Copy, AlertCircle, ArrowLeft, Wallet,
 } from "lucide-react";
 import { formatDistanceToNow, format } from "date-fns";
 import { QRCodeSVG } from "qrcode.react";
@@ -126,17 +126,20 @@ export default function CircleDashboard() {
     query: { enabled: !!userAddr && !!circleAddr },
   });
 
-  const { writeContract: approve,    data: approveTx,    isPending: approving   } = useWriteContract();
-  const { writeContract: contribute, data: contributeTx, isPending: contributing } = useWriteContract();
-  const { writeContract: trigger,    data: triggerTx,    isPending: triggering   } = useWriteContract();
+  const { writeContract: approve,    data: approveTx,    isPending: approving,    error: approveErr  } = useWriteContract();
+  const { writeContract: contribute, data: contributeTx, isPending: contributing, error: contribErr  } = useWriteContract();
+  const { writeContract: trigger,    data: triggerTx,    isPending: triggering,   error: triggerErr  } = useWriteContract();
 
-  const { isLoading: waitApprove } = useWaitForTransactionReceipt({ hash: approveTx });
-  const { isLoading: waitContrib, isSuccess: contributed } = useWaitForTransactionReceipt({
+  const { isLoading: waitApprove, isError: approveReverted } = useWaitForTransactionReceipt({ hash: approveTx });
+  const { isLoading: waitContrib, isSuccess: contributed, isError: contribReverted } = useWaitForTransactionReceipt({
     hash: contributeTx, query: { onSettled: () => refetch() },
   });
-  const { isLoading: waitTrigger, isSuccess: triggerDone } = useWaitForTransactionReceipt({
+  const { isLoading: waitTrigger, isSuccess: triggerDone, isError: triggerReverted } = useWaitForTransactionReceipt({
     hash: triggerTx, query: { onSettled: () => refetch() },
   });
+
+  const txError = approveErr || contribErr || triggerErr;
+  const txReverted = approveReverted || contribReverted || triggerReverted;
 
   /* Show VRF reveal overlay once trigger confirms */
   useEffect(() => {
@@ -168,7 +171,17 @@ export default function CircleDashboard() {
   const yieldPct       = principal > 0 ? ((yieldEarned / principal) * 100).toFixed(3) : "0";
 
   /* ── Build members for Living Circle ── */
-  const rawMembers = (allMembers as Array<{ addr: string; hasContributedThisRound: boolean; hasReceived: boolean }>) ?? [];
+  type RawMember = {
+    addr: string;
+    joinedAt: bigint;
+    contributedAt: bigint;
+    isActive: boolean;
+    consecutiveMisses: number;
+    totalContributed: bigint;
+    hasContributedThisRound: boolean;
+    hasReceived: boolean;
+  };
+  const rawMembers = (allMembers as RawMember[]) ?? [];
   const circleMembers: CircleMember[] = rawMembers.map((m, i) => ({
     addr:        m.addr,
     label:       m.addr === userAddr ? "You" : shortAddr(m.addr),
@@ -181,6 +194,25 @@ export default function CircleDashboard() {
     navigator.clipboard.writeText(joinLink);
     setCopied(true);
     setTimeout(() => setCopied(false), 2200);
+  }
+
+  /* ── Disconnected guard ── */
+  if (!userAddr) {
+    return (
+      <div style={{ padding: "80px 24px", textAlign: "center" }}>
+        <div style={{
+          width: 64, height: 64, borderRadius: "50%",
+          background: "rgba(245,242,234,0.04)",
+          border: "1px solid rgba(245,242,234,0.07)",
+          display: "flex", alignItems: "center", justifyContent: "center",
+          margin: "0 auto 16px",
+        }}>
+          <Wallet size={26} color={T.ivorySubtle} />
+        </div>
+        <p style={{ fontSize: 15, color: T.ivory, marginBottom: 6 }}>Wallet not connected</p>
+        <p style={{ fontSize: 13, color: T.ivorySubtle }}>Connect your wallet to view this circle.</p>
+      </div>
+    );
   }
 
   return (
@@ -365,6 +397,29 @@ export default function CircleDashboard() {
 
             <p style={{ fontSize: 11, color: T.ivorySubtle, marginTop: 12 }}>
               Tap anywhere to dismiss
+            </p>
+          </div>
+        </div>
+      )}
+
+      {/* ── TX error banner ── */}
+      {(txError || txReverted) && (
+        <div style={{
+          background: "rgba(239,68,68,0.08)",
+          border: "1px solid rgba(239,68,68,0.22)",
+          borderRadius: 10, padding: "12px 16px",
+          display: "flex", alignItems: "flex-start", gap: 10,
+          marginBottom: 16,
+        }}>
+          <AlertCircle size={15} color="#EF4444" style={{ flexShrink: 0, marginTop: 1 }} />
+          <div>
+            <p style={{ fontSize: 13, color: "#EF4444", fontWeight: 600, marginBottom: 2 }}>Transaction failed</p>
+            <p style={{ fontSize: 12, color: T.ivorySubtle, lineHeight: 1.5 }}>
+              {txError?.message?.includes("rejected") || txError?.message?.includes("denied")
+                ? "You rejected the transaction in your wallet."
+                : txError?.message?.includes("insufficient")
+                ? "Insufficient USDC balance to contribute."
+                : "Transaction was rejected on-chain. Check your balance and try again."}
             </p>
           </div>
         </div>
@@ -610,7 +665,7 @@ export default function CircleDashboard() {
 function MembersList({
   members, recipient, userAddr,
 }: {
-  members: Array<{ addr: string; hasContributedThisRound: boolean; hasReceived: boolean }>;
+  members: Array<{ addr: string; hasContributedThisRound: boolean; hasReceived: boolean; isActive?: boolean }>;
   recipient: string;
   userAddr?: string;
 }) {
@@ -635,6 +690,7 @@ function MembersList({
               padding: "12px 16px",
               borderBottom: i < members.length - 1 ? `1px solid ${T.border}` : "none",
               background: isRec ? "rgba(200,139,58,0.04)" : "transparent",
+              opacity: m.isActive === false ? 0.45 : 1,
             }}>
               {/* Position badge */}
               <div style={{
