@@ -5,18 +5,18 @@ import { Logo } from "../components/Logo";
 
 /* ─── colour tokens ──────────────────────────────────────── */
 const T = {
-  obsidian:    "#111111",
-  ivory:       "#F5F2EA",
-  ivoryDim:    "#A8A49C",
-  ivorySubtle: "#6B6760",
-  ivoryGhost:  "#3A3733",
-  emerald:     "#0F6B50",
+  obsidian:     "#111111",
+  ivory:        "#F5F2EA",
+  ivoryDim:     "#A8A49C",
+  ivorySubtle:  "#6B6760",
+  ivoryGhost:   "#3A3733",
+  emerald:      "#0F6B50",
   emeraldBright:"#17A77A",
-  gold:        "#C88B3A",
-  goldBright:  "#E8A84A",
-  slate:       "#46505A",
-  surface1:    "#181818",
-  surface2:    "#202020",
+  gold:         "#C88B3A",
+  goldBright:   "#E8A84A",
+  slate:        "#46505A",
+  surface1:     "#181818",
+  surface2:     "#202020",
 } as const;
 
 /* ─── intersection observer hook ─────────────────────────── */
@@ -40,7 +40,7 @@ function Eyebrow({ children, color = T.emeraldBright }: { children: React.ReactN
   return (
     <p style={{
       fontFamily: "Space Grotesk, sans-serif",
-      fontSize: 11, fontWeight: 600,
+      fontSize: 11, fontWeight: 700,
       color, letterSpacing: "0.14em",
       marginBottom: 16,
     }}>{children}</p>
@@ -58,26 +58,6 @@ function Reveal({ children, delay = 0 }: { children: React.ReactNode; delay?: nu
   );
 }
 
-function TechChip({ label, sub, color }: { label: string; sub: string; color: string }) {
-  return (
-    <div style={{
-      background: T.surface1,
-      border: `1px solid rgba(245,242,234,0.06)`,
-      borderRadius: 14,
-      padding: "24px",
-    }}>
-      <div style={{
-        display: "inline-flex",
-        background: `${color}14`, border: `1px solid ${color}35`,
-        borderRadius: 5, padding: "3px 9px",
-        fontSize: 10, fontWeight: 700, letterSpacing: "0.10em",
-        color, marginBottom: 12,
-      }}>{label}</div>
-      <p style={{ fontSize: 13, color: T.ivorySubtle, lineHeight: 1.65 }}>{sub}</p>
-    </div>
-  );
-}
-
 /* ══════════════════════════════════════════════════════════ */
 export default function Landing() {
   const navigate = useNavigate();
@@ -86,20 +66,29 @@ export default function Landing() {
     <div style={{ background: T.obsidian, color: T.ivory, overflowX: "hidden" }}>
 
       <style>{`
+        @keyframes guardian-orbit   { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @keyframes center-breathe   { 0%,100% { opacity:0.88; r:8; } 50% { opacity:1; r:10; } }
+        @keyframes log-pulse        { 0%,100% { opacity:1; } 50% { opacity:0.4; } }
+        @keyframes fade-in-up       { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+        @keyframes flow-down        { 0% { opacity:0; transform:scaleY(0); } 100% { opacity:1; transform:scaleY(1); } }
+
         @media (max-width: 768px) {
           .hero-headline  { font-size: 52px !important; }
           .two-col        { flex-direction: column !important; }
-          .hero-circle    { max-width: 300px !important; margin: 0 auto !important; }
+          .hero-circle    { max-width: 320px !important; margin: 0 auto !important; }
           .stats-row      { gap: 24px !important; }
           .proof-grid     { grid-template-columns: 1fr !important; }
           .tech-grid      { grid-template-columns: 1fr 1fr !important; }
           .footer-inner   { flex-direction: column !important; gap: 28px !important; text-align: center; }
+          .tradition-grid { grid-template-columns: 1fr 1fr !important; }
+          .flow-row       { flex-direction: column !important; align-items: flex-start !important; }
         }
         @media (max-width: 480px) {
           .hero-headline  { font-size: 42px !important; }
           .cta-headline   { font-size: 44px !important; }
           .tech-grid      { grid-template-columns: 1fr !important; }
           .stats-row      { flex-direction: column !important; gap: 20px !important; }
+          .tradition-grid { grid-template-columns: 1fr !important; }
         }
         .nav-glass {
           background: rgba(17,17,17,0.88);
@@ -112,6 +101,7 @@ export default function Landing() {
         .btn-ghost:hover    { border-color: rgba(245,242,234,0.35) !important; color: #F5F2EA !important; }
         .nav-link:hover     { color: #F5F2EA !important; }
         .footer-link:hover  { color: #A8A49C !important; }
+        .tradition-card:hover { border-color: rgba(200,139,58,0.25) !important; transform: translateY(-2px); }
       `}</style>
 
       {/* ════ NAV ════════════════════════════════════ */}
@@ -127,6 +117,10 @@ export default function Landing() {
           <Logo iconSize={30} textHeight={22} gap={9} iconColor="#17A77A" />
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <a href="#tradition" className="nav-link" style={{
+            fontSize: 14, color: T.ivorySubtle, textDecoration: "none",
+            fontWeight: 500, padding: "0 12px", transition: "color 0.15s",
+          }}>The tradition</a>
           <a href="#how" className="nav-link" style={{
             fontSize: 14, color: T.ivorySubtle, textDecoration: "none",
             fontWeight: 500, padding: "0 12px", transition: "color 0.15s",
@@ -159,13 +153,14 @@ export default function Landing() {
           className="two-col">
 
           {/* ── Text ── */}
-          <div style={{ flex: "1 1 480px", minWidth: 0 }}>
+          <div style={{ flex: "1 1 420px", minWidth: 0 }}>
             <div style={{
               display: "inline-flex", alignItems: "center", gap: 8,
               background: "rgba(15,107,80,0.10)", border: "1px solid rgba(15,107,80,0.28)",
               borderRadius: 20, padding: "6px 14px", marginBottom: 36,
             }}>
-              <span style={{ width: 6, height: 6, borderRadius: "50%", background: T.emeraldBright, flexShrink: 0 }} />
+              <span style={{ width: 6, height: 6, borderRadius: "50%", background: T.emeraldBright, flexShrink: 0,
+                animation: "log-pulse 2s ease-in-out infinite" }} />
               <span style={{ fontSize: 11, fontWeight: 600, color: T.emeraldBright, letterSpacing: "0.08em" }}>
                 LIVE ON ARBITRUM SEPOLIA
               </span>
@@ -184,11 +179,12 @@ export default function Landing() {
 
             <p style={{
               fontSize: 18, color: T.ivoryDim,
-              lineHeight: 1.7, maxWidth: 440,
+              lineHeight: 1.7, maxWidth: 420,
               marginBottom: 44, fontWeight: 400,
             }}>
-              Autonomous savings circles for Africa and its diaspora —
-              trustless, fair, and self-executing on Arbitrum.
+              Community savings circles are one of humanity's oldest financial systems.
+              ArbiCycle doesn't replace them.<br />
+              <span style={{ color: T.ivory, fontWeight: 500 }}>It protects them.</span>
             </p>
 
             <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
@@ -200,7 +196,7 @@ export default function Landing() {
                 cursor: "pointer", transition: "all 0.2s",
                 letterSpacing: "-0.01em",
               }}>Start Saving →</button>
-              <a href="#how" className="btn-ghost" style={{
+              <a href="#tradition" className="btn-ghost" style={{
                 background: "transparent", color: T.ivoryDim,
                 border: "1px solid rgba(245,242,234,0.16)",
                 borderRadius: 10, padding: "15px 32px",
@@ -208,7 +204,7 @@ export default function Landing() {
                 fontFamily: "Space Grotesk, sans-serif",
                 cursor: "pointer", transition: "all 0.2s",
                 textDecoration: "none", display: "inline-block",
-              }}>See how it works</a>
+              }}>The tradition</a>
             </div>
 
             {/* Stats */}
@@ -219,8 +215,8 @@ export default function Landing() {
               display: "flex", gap: 40, flexWrap: "wrap",
             }}>
               {[
-                { val: "2B+",  label: "People save in circles globally" },
-                { val: "$0",   label: "Coordinator risk" },
+                { val: "2B+",  label: "People save in circles worldwide" },
+                { val: "Zero", label: "Trusted coordinator required" },
                 { val: "100%", label: "On-chain transparent" },
               ].map(({ val, label }) => (
                 <div key={val}>
@@ -236,12 +232,12 @@ export default function Landing() {
             </div>
           </div>
 
-          {/* ── Circle ── */}
-          <div className="hero-circle" style={{ flex: "0 1 440px", maxWidth: 440 }}>
+          {/* ── Circle — larger, more central ── */}
+          <div className="hero-circle" style={{ flex: "0 1 500px", maxWidth: 500 }}>
             <LivingCircle
               members={DEMO_MEMBERS}
               potValue="$1,200"
-              size={440}
+              size={500}
               showGuardian={true}
               animate={true}
               round={3}
@@ -250,12 +246,12 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* ════ TRUST BAR ══════════════════════════════ */}
+      {/* ════ OPERATIONAL STATS BAR ══════════════════ */}
       <div style={{
         background: T.surface1,
         borderTop: "1px solid rgba(245,242,234,0.06)",
         borderBottom: "1px solid rgba(245,242,234,0.06)",
-        padding: "18px 28px",
+        padding: "16px 28px",
         display: "flex", justifyContent: "center", overflow: "hidden",
       }}>
         <div style={{
@@ -265,11 +261,11 @@ export default function Landing() {
           gap: 24, flexWrap: "wrap",
         }}>
           {[
-            ["Arbitrum", "L2 Security"],
-            ["Chainlink VRF", "Provable Fairness"],
-            ["Chainlink Automation", "Self-Executing"],
-            ["Aave v3", "Idle Yield"],
-            ["EIP-1167 Clones", "Gas Efficient"],
+            { val: "Arbitrum",           desc: "Settlement layer" },
+            { val: "Chainlink VRF",      desc: "Provable fairness" },
+            { val: "Chainlink Automation", desc: "Self-executing rounds" },
+            { val: "Aave v3",            desc: "Idle yield" },
+            { val: "USDC",               desc: "Stable contributions" },
           ].map(([name, desc]) => (
             <div key={name} style={{ display: "flex", alignItems: "center", gap: 8 }}>
               <span style={{ width: 5, height: 5, borderRadius: "50%", background: T.emerald, flexShrink: 0 }} />
@@ -282,28 +278,112 @@ export default function Landing() {
         </div>
       </div>
 
-      {/* ════ PROBLEM ════════════════════════════════ */}
-      <section style={{ background: T.obsidian, padding: "120px 28px" }}>
+      {/* ════ THE TRADITION ══════════════════════════ */}
+      <section id="tradition" style={{ background: T.obsidian, padding: "120px 28px" }}>
         <div style={container}>
           <Reveal>
-            <div style={{ maxWidth: 700 }}>
-              <Eyebrow>THE PROBLEM</Eyebrow>
+            <div style={{ maxWidth: 680, marginBottom: 72 }}>
+              <Eyebrow color={T.gold}>A GLOBAL TRADITION</Eyebrow>
               <h2 style={{
                 fontFamily: "Space Grotesk, sans-serif",
                 fontSize: 48, fontWeight: 700,
                 letterSpacing: "-0.035em", lineHeight: 1.1,
                 color: T.ivory, marginBottom: 20,
               }}>
-                2 billion people save<br />
-                in circles. None of them<br />
-                <span style={{ color: T.gold }}>trust the coordinator.</span>
+                Savings circles already<br />
+                power communities worldwide.
               </h2>
-              <p style={{ fontSize: 17, color: T.ivoryDim, lineHeight: 1.75, maxWidth: 520 }}>
-                <span style={{ color: T.ivory, fontStyle: "italic" }}>Ajo. Esusu. Chama. Stokvel.</span>
-                {" "}Africa's names for rotating savings circles — a model that moves
-                hundreds of billions of dollars every year, entirely on trust.
-                That trust has always been the vulnerability: one human coordinator
-                who can disappear, play favourites, or simply forget.
+              <p style={{ fontSize: 17, color: T.ivoryDim, lineHeight: 1.75 }}>
+                Long before banks, long before apps, communities built wealth together
+                through rotating savings circles. Every month, every member contributes.
+                Each round, one member receives the full pot. The system repeats until
+                everyone has received once. Simple. Powerful. Trusted for generations.
+              </p>
+            </div>
+          </Reveal>
+
+          {/* Tradition cards */}
+          <div className="tradition-grid" style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(5, 1fr)",
+            gap: 10, marginBottom: 72,
+          }}>
+            {[
+              { name: "Ajo",    region: "Nigeria",          members: "100M+ participants" },
+              { name: "Chama",  region: "Kenya",            members: "300K+ active groups" },
+              { name: "Esusu",  region: "West Africa",      members: "Centuries old" },
+              { name: "Susu",   region: "Caribbean / Ghana", members: "Diaspora network" },
+              { name: "Stokvel", region: "South Africa",    members: "$50B+ annually" },
+            ].map(({ name, region, members }) => (
+              <Reveal key={name}>
+                <div className="tradition-card" style={{
+                  background: T.surface1,
+                  border: "1px solid rgba(245,242,234,0.06)",
+                  borderRadius: 14, padding: "24px 20px",
+                  transition: "border-color 0.2s, transform 0.2s",
+                  cursor: "default",
+                }}>
+                  <p style={{
+                    fontFamily: "Space Grotesk, sans-serif",
+                    fontSize: 22, fontWeight: 700,
+                    color: T.gold, letterSpacing: "-0.02em",
+                    marginBottom: 6,
+                  }}>{name}</p>
+                  <p style={{ fontSize: 13, color: T.ivory, fontWeight: 500, marginBottom: 4 }}>{region}</p>
+                  <p style={{ fontSize: 12, color: T.ivorySubtle, lineHeight: 1.5 }}>{members}</p>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+
+          {/* The statement */}
+          <Reveal>
+            <div style={{
+              background: "rgba(200,139,58,0.05)",
+              border: "1px solid rgba(200,139,58,0.16)",
+              borderRadius: 18, padding: "48px 52px",
+              textAlign: "center",
+            }}>
+              <p style={{
+                fontFamily: "Space Grotesk, sans-serif",
+                fontSize: 28, fontWeight: 700,
+                letterSpacing: "-0.025em", lineHeight: 1.4,
+                color: T.ivory, maxWidth: 600, margin: "0 auto 16px",
+              }}>
+                ArbiCycle doesn't replace savings circles.
+              </p>
+              <p style={{
+                fontFamily: "Space Grotesk, sans-serif",
+                fontSize: 28, fontWeight: 700,
+                letterSpacing: "-0.025em",
+                color: T.gold,
+              }}>It protects them.</p>
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* ════ THE PROBLEM ════════════════════════════ */}
+      <section style={{ background: T.surface1, padding: "120px 28px" }}>
+        <div style={container}>
+          <Reveal>
+            <div style={{ maxWidth: 700, marginBottom: 56 }}>
+              <Eyebrow>THE VULNERABILITY</Eyebrow>
+              <h2 style={{
+                fontFamily: "Space Grotesk, sans-serif",
+                fontSize: 44, fontWeight: 700,
+                letterSpacing: "-0.035em", lineHeight: 1.1,
+                color: T.ivory, marginBottom: 20,
+              }}>
+                The model works.<br />
+                The coordinator is<br />
+                <span style={{ color: T.gold }}>the single point of failure.</span>
+              </h2>
+              <p style={{ fontSize: 17, color: T.ivoryDim, lineHeight: 1.75 }}>
+                Hundreds of billions flow through savings circles every year.
+                Every circle depends on one person — who collects the money,
+                decides the order, and distributes the pot. That person is human.
+                Humans disappear. Play favourites. Make mistakes. Run away with funds.
               </p>
             </div>
           </Reveal>
@@ -311,16 +391,16 @@ export default function Landing() {
           <div className="proof-grid" style={{
             display: "grid",
             gridTemplateColumns: "repeat(3, 1fr)",
-            gap: 2, marginTop: 64,
+            gap: 2,
           }}>
             {[
               { stat: "40%",   label: "of informal savings groups experience coordinator fraud or mismanagement", col: T.gold },
-              { stat: "∞",     label: "Disputes over rotation order — who goes first, who goes last, every cycle", col: T.ivoryDim },
-              { stat: "$0",    label: "Yield on idle USDC sitting in a coordinator's personal bank account",       col: T.ivoryDim },
+              { stat: "∞",     label: "Disputes over rotation order — who goes first, who goes last, who decided",  col: T.ivoryDim },
+              { stat: "$0",    label: "Yield on idle contributions sitting in a coordinator's personal account",    col: T.ivoryDim },
             ].map(({ stat, label, col }) => (
               <Reveal key={stat}>
                 <div style={{
-                  background: T.surface1,
+                  background: T.surface2,
                   border: "1px solid rgba(245,242,234,0.06)",
                   borderRadius: 16, padding: "40px 32px",
                   height: "100%",
@@ -339,6 +419,87 @@ export default function Landing() {
         </div>
       </section>
 
+      {/* ════ WHY NOW ════════════════════════════════ */}
+      <section style={{ background: T.obsidian, padding: "120px 28px" }}>
+        <div style={container}>
+          <Reveal>
+            <div style={{ maxWidth: 640, marginBottom: 64 }}>
+              <Eyebrow color={T.gold}>WHY NOW</Eyebrow>
+              <h2 style={{
+                fontFamily: "Space Grotesk, sans-serif",
+                fontSize: 44, fontWeight: 700,
+                letterSpacing: "-0.035em", lineHeight: 1.1,
+                color: T.ivory, marginBottom: 20,
+              }}>
+                The infrastructure<br />
+                finally exists.
+              </h2>
+              <p style={{ fontSize: 17, color: T.ivoryDim, lineHeight: 1.75 }}>
+                For the first time in history, we have all the pieces needed
+                to make community savings circles completely trustless.
+                This wasn't possible five years ago. It is now.
+              </p>
+            </div>
+          </Reveal>
+
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))", gap: 10 }}>
+            {[
+              {
+                icon: "💵",
+                title: "Stable digital money",
+                body: "USDC brings dollar stability to digital payments. No speculation. Contributions mean exactly what they say.",
+              },
+              {
+                icon: "⚡",
+                title: "Near-zero settlement cost",
+                body: "Arbitrum makes sub-cent transactions a reality. A circle member in Lagos pays the same fee as one in London.",
+              },
+              {
+                icon: "🎲",
+                title: "Verifiable fairness",
+                body: "Chainlink VRF produces randomness that anyone can verify on-chain. No coordinator can rig the rotation order.",
+              },
+              {
+                icon: "🤖",
+                title: "Autonomous coordination",
+                body: "Chainlink Automation runs circles without a server, a cron job, or a human. The protocol enforces its own rules.",
+              },
+            ].map(({ icon, title, body }) => (
+              <Reveal key={title}>
+                <div style={{
+                  background: T.surface1,
+                  border: "1px solid rgba(245,242,234,0.06)",
+                  borderRadius: 16, padding: "32px 28px",
+                }}>
+                  <span style={{ fontSize: 28, display: "block", marginBottom: 16 }}>{icon}</span>
+                  <p style={{
+                    fontFamily: "Space Grotesk, sans-serif",
+                    fontSize: 16, fontWeight: 700,
+                    color: T.ivory, marginBottom: 10,
+                    letterSpacing: "-0.02em",
+                  }}>{title}</p>
+                  <p style={{ fontSize: 14, color: T.ivorySubtle, lineHeight: 1.7 }}>{body}</p>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+
+          <Reveal delay={200}>
+            <div style={{ marginTop: 56, textAlign: "center" }}>
+              <p style={{
+                fontFamily: "Space Grotesk, sans-serif",
+                fontSize: 22, fontWeight: 600,
+                color: T.ivoryDim, letterSpacing: "-0.015em",
+                lineHeight: 1.6, maxWidth: 560, margin: "0 auto",
+              }}>
+                ArbiCycle is the natural evolution<br />
+                of a system that already works.
+              </p>
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
       {/* ════ THE LIVING CIRCLE ══════════════════════ */}
       <section style={{ background: T.surface1, padding: "120px 28px" }}>
         <div style={container}>
@@ -352,8 +513,8 @@ export default function Landing() {
                 marginBottom: 16,
               }}>One glance. Full picture.</h2>
               <p style={{ fontSize: 16, color: T.ivoryDim, maxWidth: 460, margin: "0 auto", lineHeight: 1.7 }}>
-                The circle communicates everything. Who paid. Who hasn't.
-                Who receives next. How much is in the pot. No charts. No confusion.
+                The circle communicates everything — who paid, who hasn't, who receives next,
+                how much is in the pot, circle health. No legends. No confusion.
               </p>
             </div>
           </Reveal>
@@ -362,11 +523,12 @@ export default function Landing() {
             display: "flex", alignItems: "center",
             gap: 80, justifyContent: "center",
           }}>
-            <div className="hero-circle" style={{ flex: "0 0 360px", maxWidth: 360 }}>
+            {/* Larger circle */}
+            <div className="hero-circle" style={{ flex: "0 0 420px", maxWidth: 420 }}>
               <LivingCircle
                 members={DEMO_MEMBERS}
                 potValue="$1,200"
-                size={360}
+                size={420}
                 showGuardian={true}
                 animate={true}
                 round={3}
@@ -411,17 +573,17 @@ export default function Landing() {
               {
                 n: "01", color: T.emerald, tag: "Smart Contract",
                 title: "Create or join a circle",
-                body: "Set contribution amount, group size, and rotation frequency. Share a link. The smart contract becomes the permanent coordinator — no human needed.",
+                body: "Set contribution amount, group size, and rotation frequency. Share an invite link. The smart contract becomes the permanent coordinator — no human needed, ever.",
               },
               {
                 n: "02", color: T.gold, tag: "Chainlink VRF",
-                title: "Provably fair rotation order",
-                body: "Chainlink VRF generates tamper-proof randomness on-chain at creation. Nobody — not the creator, not ArbiCycle — can predict or influence who goes when.",
+                title: "Rotation order locked by mathematics",
+                body: "Chainlink VRF generates tamper-proof randomness on-chain the moment the circle is full. Nobody — not the creator, not ArbiCycle — can predict or influence who goes when.",
               },
               {
-                n: "03", color: T.emeraldBright, tag: "Chainlink Automation + Aave",
-                title: "Guardian executes automatically",
-                body: "Each round, members contribute. Circle Guardian collects, distributes the pot, earns yield on idle USDC via Aave v3. Rotation triggers itself when the time comes.",
+                n: "03", color: T.emeraldBright, tag: "Guardian · Autonomous",
+                title: "The Guardian handles everything else",
+                body: "Each round, members contribute. The Guardian collects, distributes the pot, earns yield on idle funds via Aave v3, and triggers rotation automatically at deadline. Zero manual steps.",
               },
             ].map(({ n, color, tag, title, body }) => (
               <Reveal key={n}>
@@ -460,62 +622,11 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* ════ CIRCLE GUARDIAN ════════════════════════ */}
+      {/* ════ VRF CEREMONY ═══════════════════════════ */}
       <section style={{ background: T.surface1, padding: "120px 28px" }}>
-        <div style={container}>
-          <div className="two-col" style={{ display: "flex", gap: 80, alignItems: "center" }}>
-            <div style={{ flex: "0 0 280px", maxWidth: 280 }}>
-              <GuardianVisual />
-            </div>
-            <div style={{ flex: "1 1 360px" }}>
-              <Reveal>
-                <Eyebrow color={T.gold}>CIRCLE GUARDIAN</Eyebrow>
-                <h2 style={{
-                  fontFamily: "Space Grotesk, sans-serif",
-                  fontSize: 40, fontWeight: 700,
-                  letterSpacing: "-0.035em", lineHeight: 1.12,
-                  color: T.ivory, marginBottom: 20,
-                }}>
-                  An intelligence layer<br />
-                  <span style={{ color: T.gold }}>that never sleeps.</span>
-                </h2>
-                <p style={{ fontSize: 16, color: T.ivoryDim, lineHeight: 1.75, marginBottom: 32 }}>
-                  Circle Guardian is not a bot. It's the autonomous execution layer
-                  powered by Chainlink Automation — watching every circle, every round,
-                  enforcing every rule without a human operator.
-                </p>
-                <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-                  {[
-                    "Triggers rotation precisely at deadline",
-                    "Distributes the full pot to the verified recipient",
-                    "Earns Aave v3 yield on idle contributions",
-                    "Applies on-chain penalties for missed contributions",
-                    "Builds an immutable reputation score for every member",
-                  ].map(item => (
-                    <div key={item} style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
-                      <div style={{
-                        width: 18, height: 18, borderRadius: "50%",
-                        background: "rgba(15,107,80,0.15)", border: "1px solid rgba(15,107,80,0.38)",
-                        display: "flex", alignItems: "center", justifyContent: "center",
-                        flexShrink: 0, marginTop: 2,
-                      }}>
-                        <span style={{ fontSize: 9, color: T.emeraldBright }}>✓</span>
-                      </div>
-                      <span style={{ fontSize: 14, color: T.ivoryDim, lineHeight: 1.6 }}>{item}</span>
-                    </div>
-                  ))}
-                </div>
-              </Reveal>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ════ VRF FAIRNESS ═══════════════════════════ */}
-      <section style={{ background: T.obsidian, padding: "120px 28px" }}>
         <div style={{ ...container, textAlign: "center" }}>
           <Reveal>
-            <Eyebrow color={T.gold}>CHAINLINK VRF</Eyebrow>
+            <Eyebrow color={T.gold}>VERIFIABLE FAIRNESS</Eyebrow>
             <h2 style={{
               fontFamily: "Space Grotesk, sans-serif",
               fontSize: 44, fontWeight: 700,
@@ -531,48 +642,208 @@ export default function Landing() {
               maxWidth: 440, margin: "0 auto 64px",
               lineHeight: 1.75,
             }}>
-              When a circle is created, Chainlink VRF generates a provably random
-              rotation order on-chain. Immutable. Verifiable. Fair forever.
+              When a circle becomes full, a ceremony happens on-chain.
+              It cannot be manipulated. It cannot be repeated. It is permanent.
             </p>
           </Reveal>
-          <Reveal delay={120}>
-            <VRFVisual />
+
+          {/* VRF ceremony flow */}
+          <Reveal delay={80}>
+            <VRFCeremony />
+          </Reveal>
+
+          <Reveal delay={160}>
+            <div style={{ marginTop: 64 }}>
+              <VRFVisual />
+            </div>
           </Reveal>
         </div>
       </section>
 
-      {/* ════ TECHNOLOGY ═════════════════════════════ */}
-      <section style={{ background: T.surface1, padding: "100px 28px" }}>
+      {/* ════ CIRCLE GUARDIAN ════════════════════════ */}
+      <section style={{ background: T.obsidian, padding: "120px 28px" }}>
+        <div style={container}>
+          <div className="two-col" style={{ display: "flex", gap: 80, alignItems: "center" }}>
+            <div style={{ flex: "0 0 300px", maxWidth: 300 }}>
+              <GuardianActivityLog />
+            </div>
+            <div style={{ flex: "1 1 360px" }}>
+              <Reveal>
+                <Eyebrow color={T.gold}>CIRCLE GUARDIAN</Eyebrow>
+                <h2 style={{
+                  fontFamily: "Space Grotesk, sans-serif",
+                  fontSize: 40, fontWeight: 700,
+                  letterSpacing: "-0.035em", lineHeight: 1.12,
+                  color: T.ivory, marginBottom: 16,
+                }}>
+                  Autonomous coordination<br />
+                  <span style={{ color: T.gold }}>infrastructure.</span>
+                </h2>
+                <p style={{ fontSize: 16, color: T.ivoryDim, lineHeight: 1.75, marginBottom: 28 }}>
+                  The Guardian is not a bot or a mascot. It is the enforcement layer —
+                  a set of smart contract rules powered by Chainlink Automation
+                  that runs continuously, applies consequences automatically,
+                  and answers to nobody.
+                </p>
+                <p style={{ fontSize: 15, color: T.ivorySubtle, lineHeight: 1.75, marginBottom: 32, fontStyle: "italic" }}>
+                  Think of it as a financial operator that cannot be bribed, cannot be distracted,
+                  and never goes offline.
+                </p>
+                <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                  {[
+                    { action: "Triggers rotation precisely at deadline",               state: "Enforced" },
+                    { action: "Distributes the full pot to the verified recipient",    state: "On-chain" },
+                    { action: "Earns Aave v3 yield on idle contributions",             state: "Active" },
+                    { action: "Applies on-chain penalties for missed contributions",   state: "Automatic" },
+                    { action: "Updates reputation score after every event",            state: "Permanent" },
+                  ].map(({ action, state }) => (
+                    <div key={action} style={{
+                      display: "flex", gap: 12, alignItems: "center",
+                      justifyContent: "space-between",
+                      background: T.surface1,
+                      border: "1px solid rgba(245,242,234,0.05)",
+                      borderRadius: 9, padding: "12px 16px",
+                    }}>
+                      <span style={{ fontSize: 13, color: T.ivoryDim, lineHeight: 1.5 }}>{action}</span>
+                      <span style={{
+                        fontSize: 10, fontWeight: 700, letterSpacing: "0.08em",
+                        color: T.emeraldBright, flexShrink: 0,
+                        fontFamily: "Space Grotesk, sans-serif",
+                      }}>{state}</span>
+                    </div>
+                  ))}
+                </div>
+              </Reveal>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ════ WHAT HAPPENS WHEN SOMEONE MISSES ═══════ */}
+      <section style={{ background: T.surface1, padding: "120px 28px" }}>
         <div style={container}>
           <Reveal>
-            <Eyebrow>TECHNOLOGY</Eyebrow>
+            <div style={{ maxWidth: 640, marginBottom: 64 }}>
+              <Eyebrow>DESIGNED FOR IMPERFECT PARTICIPATION</Eyebrow>
+              <h2 style={{
+                fontFamily: "Space Grotesk, sans-serif",
+                fontSize: 44, fontWeight: 700,
+                letterSpacing: "-0.035em", lineHeight: 1.1,
+                color: T.ivory, marginBottom: 20,
+              }}>
+                What happens when<br />
+                someone misses a payment?
+              </h2>
+              <p style={{ fontSize: 17, color: T.ivoryDim, lineHeight: 1.75 }}>
+                Life happens. People are late. ArbiCycle was built with this reality in mind.
+                The Guardian doesn't panic — it applies a structured, transparent response
+                that protects the circle without requiring any human to intervene.
+              </p>
+            </div>
+          </Reveal>
+
+          <Reveal delay={80}>
+            <DefaultFlow />
+          </Reveal>
+
+          {/* Recovery cards */}
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: 10, marginTop: 48 }}>
+            {[
+              {
+                icon: "⏳",
+                title: "Late contribution",
+                body: "A 2% penalty is applied and directed to the group pot. Trust score updated. Circle continues uninterrupted.",
+              },
+              {
+                icon: "❌",
+                title: "Two consecutive misses",
+                body: "Member is automatically removed. Their deposit is seized and redistributed to the group pot. No vote required.",
+              },
+              {
+                icon: "🔄",
+                title: "Circle continuity",
+                body: "Removed members are skipped in all future rotations. The circle continues exactly as designed — no stuck states.",
+              },
+              {
+                icon: "📊",
+                title: "Trust score recovery",
+                body: "Members can rebuild their reputation over time in future circles. Consistent behaviour is rewarded with better access.",
+              },
+            ].map(({ icon, title, body }) => (
+              <Reveal key={title}>
+                <div style={{
+                  background: T.surface2,
+                  border: "1px solid rgba(245,242,234,0.06)",
+                  borderRadius: 14, padding: "28px 24px",
+                }}>
+                  <span style={{ fontSize: 24, display: "block", marginBottom: 14 }}>{icon}</span>
+                  <p style={{
+                    fontFamily: "Space Grotesk, sans-serif",
+                    fontSize: 15, fontWeight: 700,
+                    color: T.ivory, marginBottom: 8, letterSpacing: "-0.01em",
+                  }}>{title}</p>
+                  <p style={{ fontSize: 13, color: T.ivorySubtle, lineHeight: 1.7 }}>{body}</p>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ════ TECHNOLOGY — SPLIT ═════════════════════ */}
+      <section style={{ background: T.obsidian, padding: "100px 28px" }}>
+        <div style={container}>
+          <Reveal>
+            <Eyebrow>INFRASTRUCTURE</Eyebrow>
             <h2 style={{
               fontFamily: "Space Grotesk, sans-serif",
               fontSize: 36, fontWeight: 700,
               letterSpacing: "-0.03em", color: T.ivory,
-              marginBottom: 48,
-            }}>Infrastructure that earns trust.</h2>
+              marginBottom: 56,
+            }}>Built on infrastructure that earns trust.</h2>
+          </Reveal>
+
+          {/* TRUST INFRASTRUCTURE */}
+          <Reveal>
+            <p style={{
+              fontFamily: "Space Grotesk, sans-serif",
+              fontSize: 11, fontWeight: 700,
+              color: T.gold, letterSpacing: "0.12em",
+              marginBottom: 14,
+            }}>TRUST INFRASTRUCTURE</p>
+          </Reveal>
+          <div className="tech-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 10, marginBottom: 32 }}>
+            <TechChip label="CHAINLINK VRF" color={T.gold}
+              sub="Verifiable Random Function produces tamper-proof randomness for rotation order. The cryptographic proof lives on-chain, auditable forever." />
+            <TechChip label="CHAINLINK AUTOMATION" color={T.gold}
+              sub="Decentralized keepers monitor circle deadlines and trigger rotations automatically. No server. No cron job. No human operator needed." />
+            <TechChip label="USDC · STABLE" color={T.gold}
+              sub="All contributions and payouts are in USDC. Price stability keeps everyone focused on community savings, not market speculation." />
+          </div>
+
+          {/* EFFICIENCY INFRASTRUCTURE */}
+          <Reveal>
+            <p style={{
+              fontFamily: "Space Grotesk, sans-serif",
+              fontSize: 11, fontWeight: 700,
+              color: T.emeraldBright, letterSpacing: "0.12em",
+              marginBottom: 14,
+            }}>EFFICIENCY INFRASTRUCTURE</p>
           </Reveal>
           <div className="tech-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 10 }}>
             <TechChip label="ARBITRUM" color={T.emerald}
               sub="L2 rollup gives sub-cent transactions with Ethereum security. The fee structure makes micro-contributions viable for the first time." />
-            <TechChip label="CHAINLINK VRF" color={T.gold}
-              sub="Verifiable Random Function produces tamper-proof randomness for rotation order. The proof lives on-chain, auditable forever." />
-            <TechChip label="CHAINLINK AUTOMATION" color={T.emerald}
-              sub="Decentralized keepers monitor circle deadlines and trigger rotations automatically. No server. No cron job. No human." />
-            <TechChip label="AAVE V3" color={T.gold}
-              sub="Idle USDC in the pot earns real yield via Aave while waiting for distribution. Your savings work even while they wait." />
+            <TechChip label="AAVE V3" color={T.emerald}
+              sub="Idle USDC in the pot earns real yield via Aave while waiting for distribution. Your community savings work even while they wait." />
             <TechChip label="EIP-1167 CLONES" color={T.emerald}
-              sub="Each circle is a gas-efficient proxy clone. Creating a new savings circle costs less than a cent on Arbitrum." />
-            <TechChip label="USDC · STABLE" color={T.ivoryDim}
-              sub="All contributions and payouts are in USDC. Price stability keeps everyone focused on community savings, not speculation." />
+              sub="Each circle is a gas-efficient proxy clone. Creating a new savings circle costs less than a cent on Arbitrum — affordable for anyone." />
           </div>
         </div>
       </section>
 
       {/* ════ FINAL CTA ══════════════════════════════ */}
       <section style={{
-        background: T.obsidian, padding: "140px 28px",
+        background: T.surface1, padding: "140px 28px",
         textAlign: "center", position: "relative", overflow: "hidden",
       }}>
         <div style={{
@@ -581,23 +852,24 @@ export default function Landing() {
         }} />
         <div style={{ ...container, position: "relative", zIndex: 1 }}>
           <Reveal>
-            <Eyebrow color={T.gold}>JOIN THE CIRCLE</Eyebrow>
+            <Eyebrow color={T.gold}>THIS ALREADY EXISTS</Eyebrow>
             <h2 className="cta-headline" style={{
               fontFamily: "Space Grotesk, sans-serif",
-              fontSize: 60, fontWeight: 700,
-              letterSpacing: "-0.045em", lineHeight: 1.05,
-              color: T.ivory, marginBottom: 20,
+              fontSize: 56, fontWeight: 700,
+              letterSpacing: "-0.04em", lineHeight: 1.08,
+              color: T.ivory, marginBottom: 20, maxWidth: 640, margin: "0 auto 20px",
             }}>
-              Wealth moves<br />
-              <span style={{ color: T.gold }}>in circles.</span>
+              Community savings circles<br />
+              are where finance started.<br />
+              <span style={{ color: T.gold }}>ArbiCycle is where they go next.</span>
             </h2>
             <p style={{
               fontSize: 17, color: T.ivoryDim,
-              maxWidth: 400, margin: "0 auto 44px",
+              maxWidth: 420, margin: "0 auto 44px",
               lineHeight: 1.75,
             }}>
-              Create your first savings circle in 60 seconds.
-              No bank. No coordinator. No trust required.
+              The tradition is yours. The infrastructure is ready.
+              No coordinator. No fraud. No missing money.
             </p>
             <button
               onClick={() => navigate("/app")}
@@ -617,9 +889,9 @@ export default function Landing() {
                 (e.currentTarget as HTMLButtonElement).style.background = T.emerald;
                 (e.currentTarget as HTMLButtonElement).style.transform = "translateY(0)";
               }}
-            >Start Saving — Free</button>
+            >Start a Circle — Free</button>
             <p style={{ marginTop: 18, fontSize: 13, color: T.ivorySubtle }}>
-              Deployed on Arbitrum Sepolia. No fees during testnet.
+              Running on Arbitrum Sepolia. No fees during testnet.
             </p>
           </Reveal>
         </div>
@@ -627,7 +899,7 @@ export default function Landing() {
 
       {/* ════ FOOTER ═════════════════════════════════ */}
       <footer style={{
-        background: T.surface1,
+        background: T.obsidian,
         borderTop: "1px solid rgba(245,242,234,0.07)",
         padding: "44px 28px",
       }}>
@@ -641,9 +913,9 @@ export default function Landing() {
           </div>
           <div style={{ display: "flex", gap: 32, flexWrap: "wrap" }}>
             {[
-              { label: "GitHub",   href: "https://github.com" },
-              { label: "Docs",     href: "#" },
+              { label: "GitHub",   href: "https://github.com/H2SO4620/ArbiCycle" },
               { label: "Arbitrum", href: "https://arbitrum.io" },
+              { label: "Chainlink", href: "https://chain.link" },
             ].map(({ label, href }) => (
               <a key={label} href={href} target="_blank" rel="noopener noreferrer"
                 className="footer-link"
@@ -662,35 +934,204 @@ export default function Landing() {
   );
 }
 
-
-/* ─── Guardian Visual ────────────────────────────────────── */
-function GuardianVisual() {
+/* ─── Tech Chip ──────────────────────────────────────────── */
+function TechChip({ label, sub, color }: { label: string; sub: string; color: string }) {
   return (
-    <svg viewBox="0 0 280 280" width="100%" style={{ maxWidth: 280, display: "block" }}>
-      <defs>
-        <radialGradient id="gc" cx="50%" cy="50%" r="50%">
-          <stop offset="0%"   stopColor="#202020" />
-          <stop offset="100%" stopColor="#111111" />
-        </radialGradient>
-      </defs>
-      <g style={{ transformOrigin: "140px 140px", animation: "guardian-orbit 28s linear infinite" }}>
-        <circle cx="140" cy="140" r="128" fill="none" stroke="rgba(200,139,58,0.13)" strokeWidth="1"   strokeDasharray="3 10" />
-      </g>
-      <g style={{ transformOrigin: "140px 140px", animation: "guardian-orbit 18s linear infinite reverse" }}>
-        <circle cx="140" cy="140" r="106" fill="none" stroke="rgba(15,107,80,0.22)"  strokeWidth="1.5" strokeDasharray="3 7" />
-      </g>
-      <g style={{ transformOrigin: "140px 140px", animation: "guardian-orbit 11s linear infinite" }}>
-        <circle cx="140" cy="140" r="84"  fill="none" stroke="rgba(200,139,58,0.28)" strokeWidth="1"   strokeDasharray="2 5" />
-      </g>
-      <circle cx="140" cy="140" r="52" fill="url(#gc)" stroke="rgba(200,139,58,0.28)" strokeWidth="1.5" />
-      <circle cx="140" cy="140" r="30" fill="none" stroke="rgba(15,107,80,0.30)" strokeWidth="1" strokeDasharray="2 3" />
-      <circle cx="140" cy="140" r="8"  fill="#C88B3A" opacity="0.88"
-        style={{ animation: "center-breathe 4s ease-in-out infinite" }} />
-      <text x="140" y="218" textAnchor="middle"
-        fill="rgba(200,139,58,0.45)" fontSize="9"
-        fontFamily="Space Grotesk, sans-serif"
-        fontWeight="600" letterSpacing="0.12em">CIRCLE GUARDIAN</text>
-    </svg>
+    <div style={{
+      background: "#141414",
+      border: `1px solid rgba(245,242,234,0.06)`,
+      borderRadius: 14,
+      padding: "24px",
+    }}>
+      <div style={{
+        display: "inline-flex",
+        background: `${color}14`, border: `1px solid ${color}35`,
+        borderRadius: 5, padding: "3px 9px",
+        fontSize: 10, fontWeight: 700, letterSpacing: "0.10em",
+        color, marginBottom: 12,
+      }}>{label}</div>
+      <p style={{ fontSize: 13, color: T.ivorySubtle, lineHeight: 1.65 }}>{sub}</p>
+    </div>
+  );
+}
+
+/* ─── VRF Ceremony flow ──────────────────────────────────── */
+function VRFCeremony() {
+  const steps = [
+    { icon: "👥", label: "Members Join",          sub: "Circle reaches capacity" },
+    { icon: "🌀", label: "Circle Activates",      sub: "Contract locks in all members" },
+    { icon: "🎲", label: "Guardian Requests VRF", sub: "Chainlink randomness called on-chain" },
+    { icon: "✨", label: "Rotation Revealed",      sub: "Order returned, verified by proof" },
+    { icon: "🔒", label: "Order Locked Forever",  sub: "Immutable. Verifiable. Fair." },
+  ];
+  return (
+    <div style={{
+      display: "flex", alignItems: "center", justifyContent: "center",
+      gap: 0, flexWrap: "wrap", maxWidth: 800, margin: "0 auto",
+    }}>
+      {steps.map(({ icon, label, sub }, i) => (
+        <div key={label} style={{ display: "flex", alignItems: "center" }}>
+          <div style={{ textAlign: "center", padding: "0 16px" }}>
+            <div style={{
+              width: 56, height: 56, borderRadius: "50%",
+              background: i === 4 ? "rgba(200,139,58,0.12)" : "rgba(245,242,234,0.04)",
+              border: `1px solid ${i === 4 ? "rgba(200,139,58,0.30)" : "rgba(245,242,234,0.10)"}`,
+              display: "flex", alignItems: "center", justifyContent: "center",
+              fontSize: 22, margin: "0 auto 10px",
+            }}>{icon}</div>
+            <p style={{
+              fontFamily: "Space Grotesk, sans-serif",
+              fontSize: 12, fontWeight: 700,
+              color: i === 4 ? T.gold : T.ivory,
+              marginBottom: 4, whiteSpace: "nowrap",
+            }}>{label}</p>
+            <p style={{ fontSize: 11, color: T.ivorySubtle, whiteSpace: "nowrap" }}>{sub}</p>
+          </div>
+          {i < steps.length - 1 && (
+            <div style={{
+              width: 28, height: 1,
+              background: "rgba(245,242,234,0.12)",
+              flexShrink: 0,
+            }} />
+          )}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/* ─── Guardian Activity Log ──────────────────────────────── */
+function GuardianActivityLog() {
+  const [tick, setTick] = useState(0);
+  useEffect(() => {
+    const t = setInterval(() => setTick(x => x + 1), 2400);
+    return () => clearInterval(t);
+  }, []);
+
+  const log = [
+    { time: "just now",  msg: "Kofi received payout",          ok: true  },
+    { time: "2s ago",    msg: "Rotation triggered",             ok: true  },
+    { time: "8s ago",    msg: "Amina contributed ₦50,000",      ok: true  },
+    { time: "14s ago",   msg: "Sarah missed contribution",      ok: false },
+    { time: "15s ago",   msg: "Penalty applied — 2%",           ok: false },
+    { time: "16s ago",   msg: "Trust score updated",            ok: true  },
+    { time: "1m ago",    msg: "James contributed ₦50,000",      ok: true  },
+    { time: "2m ago",    msg: "Yield accrued: $0.42 USDC",      ok: true  },
+  ];
+
+  return (
+    <div style={{
+      background: "#0D0D0D",
+      border: "1px solid rgba(245,242,234,0.08)",
+      borderRadius: 14,
+      overflow: "hidden",
+      fontFamily: "monospace",
+    }}>
+      {/* Header */}
+      <div style={{
+        padding: "12px 16px",
+        borderBottom: "1px solid rgba(245,242,234,0.06)",
+        display: "flex", alignItems: "center", gap: 8,
+      }}>
+        <span style={{
+          width: 6, height: 6, borderRadius: "50%",
+          background: T.emeraldBright,
+          animation: "log-pulse 1.8s ease-in-out infinite",
+        }} />
+        <span style={{
+          fontSize: 10, fontWeight: 700, letterSpacing: "0.12em",
+          color: T.emeraldBright, fontFamily: "Space Grotesk, sans-serif",
+        }}>GUARDIAN · LIVE</span>
+      </div>
+
+      {/* Log entries */}
+      <div style={{ padding: "8px 0" }}>
+        {log.map(({ time, msg, ok }, i) => (
+          <div key={i} style={{
+            display: "flex", alignItems: "flex-start", gap: 10,
+            padding: "7px 16px",
+            opacity: i === 0 ? 1 : Math.max(0.22, 1 - i * 0.10),
+            animation: i === 0 ? `fade-in-up 0.4s ease` : undefined,
+            animationKey: tick,
+          }}>
+            <span style={{
+              fontSize: 9, color: ok ? T.emeraldBright : "#EF4444",
+              flexShrink: 0, marginTop: 1,
+            }}>{ok ? "✓" : "✗"}</span>
+            <span style={{ fontSize: 11, color: T.ivoryDim, flex: 1, lineHeight: 1.5 }}>{msg}</span>
+            <span style={{ fontSize: 10, color: T.ivorySubtle, flexShrink: 0 }}>{time}</span>
+          </div>
+        ))}
+      </div>
+
+      {/* Footer */}
+      <div style={{
+        padding: "10px 16px",
+        borderTop: "1px solid rgba(245,242,234,0.04)",
+        fontSize: 10, color: T.ivorySubtle,
+        fontFamily: "Space Grotesk, sans-serif",
+        letterSpacing: "0.06em",
+      }}>
+        MONITORING 1 CIRCLE · ROUND 3/6
+      </div>
+    </div>
+  );
+}
+
+/* ─── Default Flow diagram ───────────────────────────────── */
+function DefaultFlow() {
+  const steps = [
+    { icon: "⚠️",  label: "Contribution Missed",   color: "#EF4444", desc: "Deadline passes with no payment" },
+    { icon: "📢",  label: "Guardian Flags Event",  color: T.gold,    desc: "On-chain event emitted immediately" },
+    { icon: "💸",  label: "Penalty Applied",        color: T.gold,    desc: "2% penalty directed to group pot" },
+    { icon: "📉",  label: "Trust Score Updated",   color: T.ivoryDim, desc: "−80 points recorded on-chain" },
+    { icon: "🔄",  label: "Circle Continues",      color: T.emeraldBright, desc: "Rotation proceeds on schedule" },
+  ];
+
+  return (
+    <div style={{
+      background: "#0F0F0F",
+      border: "1px solid rgba(245,242,234,0.07)",
+      borderRadius: 16, padding: "36px 32px",
+      maxWidth: 700, margin: "0 auto",
+    }}>
+      <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
+        {steps.map(({ icon, label, color, desc }, i) => (
+          <div key={label}>
+            <div style={{
+              display: "flex", alignItems: "center", gap: 16,
+              padding: "14px 0",
+            }}>
+              <div style={{
+                width: 40, height: 40, borderRadius: "50%",
+                background: `${color}12`,
+                border: `1px solid ${color}35`,
+                display: "flex", alignItems: "center", justifyContent: "center",
+                fontSize: 18, flexShrink: 0,
+              }}>{icon}</div>
+              <div style={{ flex: 1 }}>
+                <p style={{
+                  fontFamily: "Space Grotesk, sans-serif",
+                  fontSize: 14, fontWeight: 700,
+                  color, marginBottom: 2,
+                }}>{label}</p>
+                <p style={{ fontSize: 12, color: T.ivorySubtle }}>{desc}</p>
+              </div>
+              <span style={{
+                fontSize: 10, fontWeight: 700, letterSpacing: "0.08em",
+                color: T.emeraldBright, fontFamily: "Space Grotesk, sans-serif",
+              }}>AUTO</span>
+            </div>
+            {i < steps.length - 1 && (
+              <div style={{
+                marginLeft: 20, width: 1, height: 20,
+                background: "rgba(245,242,234,0.08)",
+              }} />
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
   );
 }
 
@@ -704,16 +1145,14 @@ function VRFVisual() {
     { name: "Zuri",    addr: "0xd063…e38a", order: 5 },
     { name: "Michael", addr: "0xb92c…a04e", order: 6 },
   ];
-  const sorted = [...members].sort((a, b) => a.order - b.order);
 
   return (
     <div style={{
-      background: "#141414",
+      background: "#0D0D0D",
       border: "1px solid rgba(200,139,58,0.14)",
       borderRadius: 18, padding: "36px 32px",
       maxWidth: 640, margin: "0 auto",
     }}>
-      {/* Header */}
       <div style={{
         display: "flex", justifyContent: "space-between",
         alignItems: "flex-start", marginBottom: 8, flexWrap: "wrap", gap: 12,
@@ -735,7 +1174,6 @@ function VRFVisual() {
         }}>✓ VERIFIED ON-CHAIN</div>
       </div>
 
-      {/* Column labels */}
       <div style={{
         display: "flex", alignItems: "center", gap: 14,
         padding: "6px 16px 10px",
@@ -744,20 +1182,19 @@ function VRFVisual() {
         fontFamily: "Space Grotesk, sans-serif",
       }}>
         <span style={{ width: 26, textAlign: "center", flexShrink: 0 }}>#</span>
-        <span style={{ flex: 1 }}>MEMBER NAME</span>
+        <span style={{ flex: 1 }}>MEMBER</span>
         <span style={{ fontSize: 10, color: T.ivorySubtle }}>WALLET</span>
         <span style={{ width: 90, textAlign: "right", flexShrink: 0 }}>RECEIVES POT</span>
       </div>
 
       <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-        {sorted.map(({ name, addr, order }) => (
+        {members.map(({ name, addr, order }) => (
           <div key={name} style={{
             display: "flex", alignItems: "center", gap: 14,
             background: order === 1 ? "rgba(200,139,58,0.05)" : "rgba(245,242,234,0.02)",
             border: `1px solid ${order === 1 ? "rgba(200,139,58,0.22)" : "rgba(245,242,234,0.06)"}`,
             borderRadius: 9, padding: "11px 16px",
           }}>
-            {/* Position bubble */}
             <div style={{
               width: 26, height: 26, borderRadius: "50%", flexShrink: 0,
               background: order === 1 ? "rgba(200,139,58,0.18)" : "rgba(245,242,234,0.05)",
@@ -767,21 +1204,12 @@ function VRFVisual() {
               fontSize: 12, fontWeight: 700,
               color: order === 1 ? T.gold : T.ivoryDim,
             }}>{order}</div>
-
-            {/* Name */}
             <span style={{
               fontSize: 14, fontWeight: order === 1 ? 600 : 400,
               color: order === 1 ? T.ivory : T.ivoryDim,
               flex: 1, minWidth: 0,
             }}>{name}</span>
-
-            {/* Wallet address */}
-            <span style={{
-              fontFamily: "monospace", fontSize: 11,
-              color: T.ivorySubtle,
-            }}>{addr}</span>
-
-            {/* Round label */}
+            <span style={{ fontFamily: "monospace", fontSize: 11, color: T.ivorySubtle }}>{addr}</span>
             <span style={{
               width: 90, textAlign: "right", flexShrink: 0,
               fontSize: 11, fontWeight: 700, letterSpacing: "0.06em",
@@ -794,7 +1222,6 @@ function VRFVisual() {
         ))}
       </div>
 
-      {/* VRF proof footer */}
       <div style={{
         marginTop: 20, padding: "10px 14px",
         background: "rgba(245,242,234,0.02)",
