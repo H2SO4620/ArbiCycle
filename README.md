@@ -19,7 +19,7 @@
 | **ReputationModule** | `0xd4dF8e90e7962D3D057d15b5A0835473e0a048E8` | [View](https://sepolia.arbiscan.io/address/0xd4dF8e90e7962D3D057d15b5A0835473e0a048E8) |
 | **USDC (testnet)** | `0x75faf114eafb1BDbe2F0316DF893fd58CE46AA4d` | [View](https://sepolia.arbiscan.io/address/0x75faf114eafb1BDbe2F0316DF893fd58CE46AA4d) |
 
-> Live demo: **http://localhost:5173** (run `cd frontend && npm run dev`)
+> Live demo: **https://arbicycle.vercel.app**
 
 ---
 
@@ -150,15 +150,6 @@ Full x402 extension (post-hackathon): EIP-2612 permit + HTTP 402 headers + mobil
 Score ≥ 300 → eligible for collateral-free micro-loans up to 5× contribution across any circle.
 
 ---
-
-## Deployed Contracts
-
-> Fill in after running the deploy script.
-
-| Chain | CircleFactory | ReputationModule |
-|---|---|---|
-| Arbitrum Sepolia | `0x...` | `0x...` |
-| Robinhood Chain | `0x...` | `0x...` |
 
 ---
 
