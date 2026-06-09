@@ -1,0 +1,14 @@
+{
+  "name": "arbicycle",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "install:all": "npm i --prefix frontend && npm i --prefix keeper",
+    "dev:frontend": "npm run dev --prefix frontend",
+    "build:frontend": "npm run build --prefix frontend",
+    "dev:keeper": "npm run dev --prefix keeper",
+    "test": "cd contracts && forge test -vv",
+    "deploy:sepolia": "cd contracts && forge script script/Deploy.s.sol --rpc-url $ARB_SEPOLIA_RPC --broadcast --verify",
+    "deploy:one": "cd contracts && forge script script/Deploy.s.sol --rpc-url $ARB_ONE_RPC --broadcast --verify"
+  }
+}

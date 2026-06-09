@@ -1,0 +1,132 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── DESIGN SYSTEM ──────────────────────────────────────── */
+:root {
+  --obsidian:       #111111;
+  --ivory:          #F5F2EA;
+  --ivory-dim:      #A8A49C;
+  --ivory-subtle:   #6B6760;
+  --ivory-ghost:    #3A3733;
+  --emerald:        #0F6B50;
+  --emerald-bright: #17A77A;
+  --emerald-dim:    #0A4A38;
+  --gold:           #C88B3A;
+  --gold-bright:    #E8A84A;
+  --gold-dim:       #8A5E20;
+  --slate:          #46505A;
+  --surface-0:      #111111;
+  --surface-1:      #181818;
+  --surface-2:      #202020;
+  --surface-3:      #2A2A2A;
+  --border:         rgba(245,242,234,0.08);
+  --border-mid:     rgba(245,242,234,0.12);
+  --border-hi:      rgba(245,242,234,0.22);
+}
+
+/* ─── BASE RESET ─────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--obsidian);
+  color: var(--ivory);
+  font-family: "Inter", system-ui, sans-serif;
+  line-height: 1.5;
+  overflow-x: hidden;
+  min-height: 100dvh;
+}
+
+/* ─── TYPOGRAPHY ─────────────────────────────────────────── */
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Space Grotesk", "Inter", system-ui, sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  color: var(--ivory);
+}
+
+/* ─── SCROLLBAR ──────────────────────────────────────────── */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--ivory-ghost); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--ivory-subtle); }
+
+/* ─── SELECTION ──────────────────────────────────────────── */
+::selection { background: rgba(200,139,58,0.25); color: var(--ivory); }
+
+/* ─── INPUTS ─────────────────────────────────────────────── */
+input, textarea, select { font-family: inherit; background: transparent; color: inherit; }
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+input[type="number"] { -moz-appearance: textfield; }
+
+/* ─── FOCUS ──────────────────────────────────────────────── */
+:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; border-radius: 6px; }
+
+/* ─── UTILITY CLASSES ────────────────────────────────────── */
+.font-display { font-family: "Space Grotesk", "Inter", system-ui, sans-serif; }
+
+/* Shimmer skeleton */
+.shimmer {
+  background: linear-gradient(90deg, var(--surface-2) 25%, var(--surface-3) 50%, var(--surface-2) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Float */
+.animate-float { animation: float 6s ease-in-out infinite; }
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-8px); }
+}
+
+/* Press */
+.press:active { transform: scale(0.97); transition: transform 0.1s; }
+
+/* Fade up */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.fade-up { animation: fadeUp 0.6s ease forwards; }
+
+/* ─── LIVING CIRCLE ANIMATIONS ───────────────────────────── */
+/* Guardian orbital ring */
+@keyframes guardian-orbit {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* Circle-center text pulse (subtle) */
+@keyframes center-breathe {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.85; }
+}
+
+/* Recipient node gold pulse */
+@keyframes recipient-pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.65; }
+}
+
+/* ─── SPINNER ────────────────────────────────────────────── */
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+.animate-spin { animation: spin 1s linear infinite; }
+
+/* ─── APP LAYOUT ─────────────────────────────────────────── */
+#root { min-height: 100vh; display: flex; flex-direction: column; }
