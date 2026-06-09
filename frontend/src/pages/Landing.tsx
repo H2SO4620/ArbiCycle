@@ -376,14 +376,16 @@ export default function Landing() {
                 color: T.ivory, marginBottom: 20,
               }}>
                 The model works.<br />
-                The coordinator is<br />
-                <span style={{ color: T.gold }}>the single point of failure.</span>
+                <span style={{ color: T.gold }}>The coordination doesn't.</span>
               </h2>
+              <p style={{ fontSize: 17, color: T.ivoryDim, lineHeight: 1.75, marginBottom: 16 }}>
+                For generations, communities have used rotating savings circles
+                to build wealth together through trust, consistency, and accountability.
+              </p>
               <p style={{ fontSize: 17, color: T.ivoryDim, lineHeight: 1.75 }}>
-                Hundreds of billions flow through savings circles every year.
-                Every circle depends on one person — who collects the money,
-                decides the order, and distributes the pot. That person is human.
-                Humans disappear. Play favourites. Make mistakes. Run away with funds.
+                One human coordinator can disappear, delay payouts, play favourites,
+                or lose track entirely. ArbiCycle automates the coordination layer —
+                protecting the trust that already exists.
               </p>
             </div>
           </Reveal>
