@@ -579,6 +579,7 @@ export default function CircleDashboard() {
                   onClick={() => approve({
                     address: contracts.usdc, abi: ERC20_ABI,
                     functionName: "approve", args: [circleAddr!, amount as bigint],
+                    gas: 100_000n,
                   })}
                   style={{
                     width: "100%", background: T.gold,
@@ -598,6 +599,7 @@ export default function CircleDashboard() {
                 disabled={contributing || waitContrib || needsApprove}
                 onClick={() => contribute({
                   address: circleAddr!, abi: CIRCLE_ABI, functionName: "contribute",
+                  gas: 800_000n,
                 })}
                 style={{
                   width: "100%", background: T.emerald,
@@ -620,7 +622,7 @@ export default function CircleDashboard() {
           {isActive && rotationDue && (
             <button
               disabled={triggering || waitTrigger}
-              onClick={() => trigger({ address: circleAddr!, abi: CIRCLE_ABI, functionName: "triggerRotation" })}
+              onClick={() => trigger({ address: circleAddr!, abi: CIRCLE_ABI, functionName: "triggerRotation", gas: 1_200_000n })}
               style={{
                 width: "100%",
                 background: "linear-gradient(135deg, #17A77A, #0F6B50)",

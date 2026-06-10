@@ -343,6 +343,7 @@ export default function JoinCircle() {
               onClick={() => approve({
                 address: contracts.usdc, abi: ERC20_ABI,
                 functionName: "approve", args: [circleAddr!, amount as bigint],
+                gas: 100_000n,
               })}
               disabled={approving || waitingApprove}
               style={{
@@ -362,7 +363,7 @@ export default function JoinCircle() {
           )}
 
           <button
-            onClick={() => join({ address: circleAddr!, abi: CIRCLE_ABI, functionName: "join" })}
+            onClick={() => join({ address: circleAddr!, abi: CIRCLE_ABI, functionName: "join", gas: 1_000_000n })}
             disabled={joining || waitingJoin || needsApprove || !hasEnoughBalance}
             style={{
               width: "100%",

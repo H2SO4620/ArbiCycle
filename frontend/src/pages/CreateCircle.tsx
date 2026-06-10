@@ -93,6 +93,7 @@ export default function CreateCircle() {
       address: contracts.factory, abi: CIRCLE_FACTORY_ABI,
       functionName: "createCircle",
       args: [form.name, parseUnits(form.contribution, 6), BigInt(form.maxMembers), form.frequency],
+      gas: 3_000_000n,
     });
   }
 
