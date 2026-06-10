@@ -920,6 +920,8 @@ export default function Landing() {
           <div style={{ display: "flex", gap: 32, flexWrap: "wrap" }}>
             {[
               { label: "GitHub",   href: "https://github.com/H2SO4620/ArbiCycle" },
+              { label: "Factory Contract",    href: "https://sepolia.arbiscan.io/address/0xbbAE2b7b65c9a9cFA350B6498411C8bD0288e2d1" },
+              { label: "Reputation Contract", href: "https://sepolia.arbiscan.io/address/0xd4dF8e90e7962D3D057d15b5A0835473e0a048E8" },
               { label: "Arbitrum", href: "https://arbitrum.io" },
               { label: "Chainlink", href: "https://chain.link" },
             ].map(({ label, href }) => (
@@ -930,9 +932,14 @@ export default function Landing() {
               </a>
             ))}
           </div>
-          <p style={{ fontSize: 12, color: T.ivorySubtle }}>
-            Arbitrum Open House · London 2026
-          </p>
+          <div style={{ textAlign: "right" }}>
+            <p style={{ fontSize: 12, color: T.ivorySubtle }}>
+              Deployed on Arbitrum Sepolia · Robinhood Chain eligible
+            </p>
+            <p style={{ fontSize: 12, color: T.ivorySubtle, marginTop: 4 }}>
+              Built for Arbitrum Open House · London 2026
+            </p>
+          </div>
         </div>
       </footer>
 
