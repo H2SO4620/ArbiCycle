@@ -3,7 +3,7 @@ import { useAccount, useReadContract, useChainId } from "wagmi";
 import { CIRCLE_FACTORY_ABI } from "../config/abis";
 import { CONTRACTS } from "../config/wagmi";
 import CircleCard, { CircleCardSkeleton } from "../components/CircleCard";
-import { Plus, ArrowRight, Wallet } from "lucide-react";
+import { Plus, ArrowRight, Wallet, Compass } from "lucide-react";
 import { arbitrumSepolia } from "wagmi/chains";
 import LivingCircle, { DEMO_MEMBERS } from "../components/LivingCircle";
 
