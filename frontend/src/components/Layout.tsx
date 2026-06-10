@@ -3,6 +3,7 @@ import { LayoutDashboard, PlusCircle, User, Compass } from "lucide-react";
 import { useAccount } from "wagmi";
 import WalletButton from "./WalletButton";
 import { Logo, EmblemIcon, WordmarkSVG } from "./Logo";
+import CinematicBackground from "./CinematicBackground";
 
 /* ─── design tokens ──────────────────────────────────────── */
 const T = {
@@ -32,7 +33,8 @@ export default function Layout() {
   const currentPage = NAV.find(n => n.to === location.pathname)?.label ?? "Dashboard";
 
   return (
-    <div style={{ minHeight: "100dvh", display: "flex", background: T.obsidian }}>
+    <div style={{ minHeight: "100dvh", display: "flex", position: "relative" }}>
+      <CinematicBackground />
 
       {/* ── Subtle dot grid ── */}
       <div style={{

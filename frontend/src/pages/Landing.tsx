@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import LivingCircle, { DEMO_MEMBERS } from "../components/LivingCircle";
 import { Logo } from "../components/Logo";
+import CinematicBackground from "../components/CinematicBackground";
 
 /* ─── colour tokens ──────────────────────────────────────── */
 const T = {
@@ -63,7 +64,10 @@ export default function Landing() {
   const navigate = useNavigate();
 
   return (
-    <div style={{ background: T.obsidian, color: T.ivory, overflowX: "hidden" }}>
+    <div style={{ position: "relative", color: T.ivory, overflowX: "hidden" }}>
+      <CinematicBackground />
+
+      <div style={{ position: "relative", zIndex: 1 }}>
 
       <style>{`
         @keyframes guardian-orbit   { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
@@ -279,7 +283,7 @@ export default function Landing() {
       </div>
 
       {/* ════ THE TRADITION ══════════════════════════ */}
-      <section id="tradition" style={{ background: T.obsidian, padding: "120px 28px" }}>
+      <section id="tradition" style={{ background: "transparent", padding: "120px 28px" }}>
         <div style={container}>
           <Reveal>
             <div style={{ maxWidth: 680, marginBottom: 72 }}>
@@ -422,7 +426,7 @@ export default function Landing() {
       </section>
 
       {/* ════ WHY NOW ════════════════════════════════ */}
-      <section style={{ background: T.obsidian, padding: "120px 28px" }}>
+      <section style={{ background: "transparent", padding: "120px 28px" }}>
         <div style={container}>
           <Reveal>
             <div style={{ maxWidth: 640, marginBottom: 64 }}>
@@ -558,7 +562,7 @@ export default function Landing() {
       </section>
 
       {/* ════ HOW IT WORKS ═══════════════════════════ */}
-      <section id="how" style={{ background: T.obsidian, padding: "120px 28px" }}>
+      <section id="how" style={{ background: "transparent", padding: "120px 28px" }}>
         <div style={container}>
           <Reveal>
             <Eyebrow>HOW IT WORKS</Eyebrow>
@@ -663,7 +667,7 @@ export default function Landing() {
       </section>
 
       {/* ════ CIRCLE GUARDIAN ════════════════════════ */}
-      <section style={{ background: T.obsidian, padding: "120px 28px" }}>
+      <section style={{ background: "transparent", padding: "120px 28px" }}>
         <div style={container}>
           <div className="two-col" style={{ display: "flex", gap: 80, alignItems: "center" }}>
             <div style={{ flex: "0 0 300px", maxWidth: 300 }}>
@@ -793,7 +797,7 @@ export default function Landing() {
       </section>
 
       {/* ════ TECHNOLOGY — SPLIT ═════════════════════ */}
-      <section style={{ background: T.obsidian, padding: "100px 28px" }}>
+      <section style={{ background: "transparent", padding: "100px 28px" }}>
         <div style={container}>
           <Reveal>
             <Eyebrow>INFRASTRUCTURE</Eyebrow>
@@ -901,7 +905,7 @@ export default function Landing() {
 
       {/* ════ FOOTER ═════════════════════════════════ */}
       <footer style={{
-        background: T.obsidian,
+        background: "transparent",
         borderTop: "1px solid rgba(245,242,234,0.07)",
         padding: "44px 28px",
       }}>
@@ -932,6 +936,7 @@ export default function Landing() {
         </div>
       </footer>
 
+      </div>
     </div>
   );
 }
