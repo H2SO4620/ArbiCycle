@@ -368,7 +368,7 @@ export default function Landing() {
       </section>
 
       {/* ════ THE PROBLEM ════════════════════════════ */}
-      <section style={{ background: T.surface1, padding: "120px 28px" }}>
+      <section style={{ background: "rgba(24,24,24,0.6)", padding: "120px 28px" }}>
         <div style={container}>
           <Reveal>
             <div style={{ maxWidth: 700, marginBottom: 56 }}>
@@ -507,7 +507,7 @@ export default function Landing() {
       </section>
 
       {/* ════ THE LIVING CIRCLE ══════════════════════ */}
-      <section style={{ background: T.surface1, padding: "120px 28px" }}>
+      <section style={{ background: "rgba(24,24,24,0.6)", padding: "120px 28px" }}>
         <div style={container}>
           <Reveal>
             <div style={{ textAlign: "center", marginBottom: 72 }}>
@@ -629,7 +629,7 @@ export default function Landing() {
       </section>
 
       {/* ════ VRF CEREMONY ═══════════════════════════ */}
-      <section style={{ background: T.surface1, padding: "120px 28px" }}>
+      <section style={{ background: "rgba(24,24,24,0.6)", padding: "120px 28px" }}>
         <div style={{ ...container, textAlign: "center" }}>
           <Reveal>
             <Eyebrow color={T.gold}>VERIFIABLE FAIRNESS</Eyebrow>
@@ -726,7 +726,7 @@ export default function Landing() {
       </section>
 
       {/* ════ WHAT HAPPENS WHEN SOMEONE MISSES ═══════ */}
-      <section style={{ background: T.surface1, padding: "120px 28px" }}>
+      <section style={{ background: "rgba(24,24,24,0.6)", padding: "120px 28px" }}>
         <div style={container}>
           <Reveal>
             <div style={{ maxWidth: 640, marginBottom: 64 }}>
@@ -849,7 +849,7 @@ export default function Landing() {
 
       {/* ════ FINAL CTA ══════════════════════════════ */}
       <section style={{
-        background: T.surface1, padding: "140px 28px",
+        background: "rgba(24,24,24,0.6)", padding: "140px 28px",
         textAlign: "center", position: "relative", overflow: "hidden",
       }}>
         <div style={{
