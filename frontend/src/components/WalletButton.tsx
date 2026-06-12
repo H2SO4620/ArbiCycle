@@ -1,7 +1,13 @@
 import { useAccount, useConnect, useDisconnect, useChainId, useSwitchChain } from "wagmi";
 import { arbitrumSepolia } from "wagmi/chains";
 import { useState } from "react";
-import { Wallet, ChevronDown, LogOut, AlertTriangle } from "lucide-react";
+import { Wallet, ChevronDown, LogOut, AlertTriangle, Check } from "lucide-react";
+import { robinhoodChain, SUPPORTED_CHAIN_IDS } from "../config/wagmi";
+
+const NETWORKS = [
+  { id: arbitrumSepolia.id, label: "Arbitrum Sepolia" },
+  { id: robinhoodChain.id,  label: "Robinhood Chain"  },
+] as const;
 
 const T = {
   obsidian:    "#111111",
@@ -38,7 +44,44 @@ export default function WalletButton({ sidebar = false }: { sidebar?: boolean })
   const [open, setOpen]          = useState(false);
   const [showConnect, setShowConnect] = useState(false);
 
-  const isWrongNetwork = isConnected && chainId !== arbitrumSepolia.id && chainId !== 42161;
+  const networkSection = (
+    <>
+      <p style={{ fontSize: 10, color: T.ivorySubtle, padding: "6px 10px 4px", letterSpacing: "0.08em" }}>
+        NETWORK
+      </p>
+      {NETWORKS.map(net => {
+        const active = chainId === net.id;
+        return (
+          <button
+            key={net.id}
+            onClick={() => { if (!active) switchChain({ chainId: net.id }); }}
+            style={{
+              display: "flex", alignItems: "center", gap: 8, width: "100%",
+              padding: "9px 10px", borderRadius: 7,
+              fontSize: 13, fontWeight: 500,
+              color: active ? T.emeraldBright : T.ivory,
+              background: "none", border: "none",
+              cursor: active ? "default" : "pointer",
+              fontFamily: "Space Grotesk, sans-serif",
+              transition: "background 0.15s",
+            }}
+            onMouseOver={e => { if (!active) e.currentTarget.style.background = "rgba(245,242,234,0.05)"; }}
+            onMouseOut={e => (e.currentTarget.style.background = "none")}
+          >
+            <span style={{
+              width: 6, height: 6, borderRadius: "50%", flexShrink: 0,
+              background: active ? T.emeraldBright : "rgba(245,242,234,0.20)",
+            }} />
+            <span style={{ flex: 1, textAlign: "left" }}>{net.label}</span>
+            {active && <Check size={12} />}
+          </button>
+        );
+      })}
+      <div style={{ height: 1, background: T.border, margin: "4px 0" }} />
+    </>
+  );
+
+  const isWrongNetwork = isConnected && !(SUPPORTED_CHAIN_IDS as readonly number[]).includes(chainId);
 
   /* ── Not connected ── */
   if (!isConnected) {
@@ -155,6 +198,7 @@ export default function WalletButton({ sidebar = false }: { sidebar?: boolean })
               wordBreak: "break-all", lineHeight: 1.5,
             }}>{address}</p>
             <div style={{ height: 1, background: T.border, marginBottom: 4 }} />
+            {networkSection}
             <button
               onClick={() => { disconnect(); setOpen(false); }}
               style={{
@@ -203,7 +247,8 @@ export default function WalletButton({ sidebar = false }: { sidebar?: boolean })
         <ChevronDown size={12} color={T.ivorySubtle} />
       </button>
       {open && (
-        <div style={{ ...dropStyle, top: "calc(100% + 6px)", right: 0, minWidth: 160 }}>
+        <div style={{ ...dropStyle, top: "calc(100% + 6px)", right: 0, minWidth: 200 }}>
+          {networkSection}
           <button
             onClick={() => { disconnect(); setOpen(false); }}
             style={{
