@@ -3,25 +3,26 @@ import { arbitrum, arbitrumSepolia } from "wagmi/chains";
 import { injected, walletConnect, coinbaseWallet } from "@wagmi/connectors";
 import { defineChain } from "viem";
 
-// ── Robinhood Chain (Arbitrum Orbit L3) ───────────────────────────────────────
+// ── Robinhood Chain Testnet (Arbitrum Orbit) ──────────────────────────────────
 // Official hackathon prize track — deploy here for reserved top-3 slot.
-// TODO: verify chain ID + RPC at https://developer.robinhoodchain.com
+// Docs: https://docs.robinhood.com/chain · Faucet: https://faucet.testnet.chain.robinhood.com
 export const robinhoodChain = defineChain({
-  id: 1996,
-  name: "Robinhood Chain",
+  id: 46630,
+  name: "Robinhood Chain Testnet",
   nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },
+  testnet: true,
   rpcUrls: {
     default: {
-      http: [import.meta.env.VITE_ROBINHOOD_RPC ?? "https://rpc.robinhoodchain.com"],
+      http: [import.meta.env.VITE_ROBINHOOD_RPC ?? "https://rpc.testnet.chain.robinhood.com"],
     },
     public: {
-      http: ["https://rpc.robinhoodchain.com"],
+      http: ["https://rpc.testnet.chain.robinhood.com"],
     },
   },
   blockExplorers: {
     default: {
       name: "Robinhood Explorer",
-      url: "https://explorer.robinhoodchain.com",
+      url: "https://explorer.testnet.chain.robinhood.com",
     },
   },
 });
@@ -64,10 +65,10 @@ export const CONTRACTS = {
     usdc:       "0xaf88d065e77c8cC2239327C5EDb3A432268e5831" as `0x${string}`,
   },
   [robinhoodChain.id]: {
-    factory:    (import.meta.env.VITE_FACTORY_ROBINHOOD    ?? "0x0000000000000000000000000000000000000000") as `0x${string}`,
-    reputation: (import.meta.env.VITE_REPUTATION_ROBINHOOD ?? "0x0000000000000000000000000000000000000000") as `0x${string}`,
-    // TODO: update with actual bridged USDC address on Robinhood Chain
-    usdc:       (import.meta.env.VITE_USDC_ROBINHOOD ?? "0x0000000000000000000000000000000000000000") as `0x${string}`,
+    factory:    (import.meta.env.VITE_FACTORY_ROBINHOOD    ?? "0x1B865921F47405aA03CbcC5AC9E7b3cf0326B779") as `0x${string}`,
+    reputation: (import.meta.env.VITE_REPUTATION_ROBINHOOD ?? "0x4D169Da25286Dc372d2f32fe9E3A339A516Ba5d6") as `0x${string}`,
+    // MockUSDC with open faucet() — USDC isn't live on Robinhood Chain testnet
+    usdc:       (import.meta.env.VITE_USDC_ROBINHOOD ?? "0xb83D0b7eb2933eD7b1AAe05fEC28EeB3EBb604C1") as `0x${string}`,
   },
 } as const;
 

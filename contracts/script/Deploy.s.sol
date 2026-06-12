@@ -5,6 +5,7 @@ import {Script, console2} from "forge-std/Script.sol";
 import {ArbiCycleCircle} from "../src/ArbiCycleCircle.sol";
 import {CircleFactory}   from "../src/CircleFactory.sol";
 import {ReputationModule} from "../src/ReputationModule.sol";
+import {MockUSDC, MockAavePool} from "../src/mocks/Mocks.sol";
 
 /**
  * @notice ArbiCycle deployment script.
@@ -54,16 +55,12 @@ contract Deploy is Script {
     address constant VRF_COORD_ONE  = 0x41034678D6C633D8a95c75e1138A360a28bA15d1;
     bytes32 constant VRF_KEYHASH_ONE = 0x72d2b016bb5b62912afea355ebf33b91319f828738b111b723b309bbd0b8df67;
 
-    // ── Robinhood Chain (Arbitrum Orbit L3) ──────────────────────────────────
-    // TODO: Replace placeholder addresses once Robinhood Chain mainnet is live.
-    //       Track official addresses at: https://developer.robinhoodchain.com
-    // Chain ID: 1996 (verify at https://chainlist.org)
-    // USDC: bridged from Arbitrum — deploy MockUSDC for testnet
-    address constant USDC_ROBINHOOD      = address(0); // TODO: set after bridge
-    address constant AAVE_POOL_ROBINHOOD = address(0); // TODO: Aave on Robinhood Chain
-    address constant AUSDC_ROBINHOOD     = address(0); // TODO
-    // VRF not yet available on Robinhood Chain → address(0) = block-hash fallback
-    address constant VRF_COORD_ROBINHOOD = address(0);
+    // ── Robinhood Chain Testnet (Arbitrum Orbit L2) ──────────────────────────
+    // Chain ID: 46630 · RPC: https://rpc.testnet.chain.robinhood.com
+    // Explorer: https://explorer.testnet.chain.robinhood.com
+    // USDC and Aave v3 are not live on Robinhood Chain testnet, so the script
+    // deploys MockUSDC (open faucet) + MockAavePool there.
+    // VRF not available on Robinhood Chain → address(0) = block-hash fallback
 
     function run() external {
         uint256 deployerKey = vm.envUint("PRIVATE_KEY");
@@ -93,14 +90,28 @@ contract Deploy is Script {
             vrfCoord     = VRF_COORD_ONE;
             vrfKeyHash   = VRF_KEYHASH_ONE;
 
-        } else if (block.chainid == 1996) {
-            console2.log("Deploying to Robinhood Chain...");
+        } else if (block.chainid == 46630) {
+            console2.log("Deploying to Robinhood Chain Testnet...");
             console2.log("NOTE: VRF disabled - using block-hash shuffle fallback");
-            console2.log("NOTE: Update USDC/Aave addresses once available on Robinhood Chain");
-            usdcAddr     = USDC_ROBINHOOD;
-            aavePoolAddr = AAVE_POOL_ROBINHOOD;
-            aUsdcAddr    = AUSDC_ROBINHOOD;
-            vrfCoord     = VRF_COORD_ROBINHOOD; // address(0)
+            console2.log("NOTE: Deploying MockUSDC + MockAavePool (no USDC/Aave on this chain yet)");
+
+            vm.startBroadcast(deployerKey);
+            MockUSDC mockUsdc     = new MockUSDC();
+            MockAavePool mockPool = new MockAavePool(address(mockUsdc));
+            // Seed the pool so withdrawals always have liquidity
+            mockUsdc.mint(address(mockPool), 10_000_000e6);
+            // Faucet the deployer for demos
+            mockUsdc.mint(deployer, 100_000e6);
+            vm.stopBroadcast();
+
+            console2.log("MockUSDC:        ", address(mockUsdc));
+            console2.log("MockAavePool:    ", address(mockPool));
+            console2.log("MockAUsdc:       ", address(mockPool.aUsdc()));
+
+            usdcAddr     = address(mockUsdc);
+            aavePoolAddr = address(mockPool);
+            aUsdcAddr    = address(mockPool.aUsdc());
+            vrfCoord     = address(0); // block-hash fallback
             vrfKeyHash   = bytes32(0);
             vrfSubId     = 0;
 
